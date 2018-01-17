@@ -16,10 +16,10 @@
         <p><input type="file" name="pic" /></p>
         <p><input type="submit" value="确定上传" /></p>    
     </form>
-    <p><input type="button" value="删除该相册" /></p>
-    <ul style="overflow:hidden">
+    <p><input type="button" value="删除该相册" class="delfolder" /></p>
+    <ul class="pic-list">
         <%for(let i=1;i<obj.length;i++){%>
-            <li style="float:left;width:150px;border:1px solid #ccc;padding:3px;list-style:none;margin:5px" id="<%=obj[i].pic%>">
+            <li data-id="<%=obj[i].name%>">
                     <p style="width:100%;height:70px;overflow:hidden"><a target="_blank" href="img/<%=title%>/<%=obj[i].pic%>"><img src="img/<%=title%>/<%=obj[i].pic%>" width="100%" height="70"></a></p>
                     <p><%=obj[i].pic%></p>
                     <p><input type="button" value="删除" class="delpic"></p>
@@ -30,7 +30,21 @@
      <script>
          $(function(){
              $("ul").on("click",".delpic",function(){
-                 console.log($(this).parent("li").index())
+                 console.log($(this).parents("li").attr("data-id"));
+                 var delpic=$(this).parents("li").attr("data-id");
+                 $.ajax({url:"/<%=title%>/delpic/"+delpic,success:function(result){
+                     console.log(result);
+                     //删除图片后后台不能restful 在这里刷新页面重新读取数据输出模板
+                     location.replace(location.href);
+                 }})
+             })
+
+             $(".delfolder").click(function(){
+                //  $.ajax({url:"/delfolder/<%=title%>",success:function(result){
+                //      console.log(result);
+                //      location.replace("/delfolder/<%=title%>");
+                //  }})
+                location.replace("/delfolder/<%=title%>");
              })
          })
      </script>
